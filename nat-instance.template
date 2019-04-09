@@ -1,5 +1,6 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'Launches a NAT instance for external outbound connectivity (qs-1nb14cqca)'
+Description: Launches a NAT instance for external outbound connectivity (qs-1nb14cqca)
 Metadata:
     Stack:
         Value: 2
@@ -56,19 +57,23 @@ Parameters:
         Description: Allocation ID for NAT EIP
         Type: String
 Conditions:
-    cAddRouteForSecondSubnet: !Not [!Equals [!Ref pRouteTablePrivateB, '']] 
+    cAddRouteForSecondSubnet:
+      !Not
+    - !Equals
+        - !Ref pRouteTablePrivateB
+        - ''
 Resources:
     rNatInstanceEni:
         Type: AWS::EC2::NetworkInterface
         Properties:
             SubnetId: !Ref pDMZSubnetA
             GroupSet:
-              - !Ref pSecurityGroupSSHFromVpc
-              - !Ref pSecurityGroupVpcNat
+            - !Ref pSecurityGroupSSHFromVpc
+            - !Ref pSecurityGroupVpcNat
             Description: Interface for ProductionNat device
             Tags:
-              - Key: Network
-                Value: ProductionNatDevice
+            - Key: Network
+              Value: ProductionNatDevice
     rNatInstance:
         Type: AWS::EC2::Instance
         Properties:
@@ -76,10 +81,11 @@ Resources:
             SourceDestCheck: false
             KeyName: !Ref pEC2KeyPair
             Tags:
-              - Key: Name
-                Value: !Sub ${pVpcName} NAT device used for patching
-            UserData: !Base64
-                'Fn::Sub': |
+            - Key: Name
+              Value: !Sub ${pVpcName} NAT device used for patching
+            UserData:
+              !Base64
+                Fn::Sub: |
                     #!/bin/sh
                     echo 1 > /proc/sys/net/ipv4/ip_forward
                     echo 0 > /proc/sys/net/ipv4/conf/eth0/send_redirects
@@ -92,12 +98,12 @@ Resources:
                     EOF
             ImageId: !Ref pNatAmi
             NetworkInterfaces:
-              - NetworkInterfaceId: !Ref rNatInstanceEni
-                DeviceIndex: 0
+            - NetworkInterfaceId: !Ref rNatInstanceEni
+              DeviceIndex: 0
     AssociateEipNat:
         Type: AWS::EC2::EIPAssociation
         DependsOn:
-          - rNatInstance
+        - rNatInstance
         Properties:
             AllocationId: !Ref pEipNatAllocationId
             NetworkInterfaceId: !Ref rNatInstanceEni
@@ -114,3 +120,4 @@ Resources:
             DestinationCidrBlock: 0.0.0.0/0
             RouteTableId: !Ref pRouteTablePrivateB
             InstanceId: !Ref rNatInstance
+...

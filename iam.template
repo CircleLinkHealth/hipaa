@@ -1,5 +1,7 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'Provides the base security, IAM, and access configuration for the AWS account (qs-1nb14cqc0)'
+Description: Provides the base security, IAM, and access configuration for the AWS
+    account (qs-1nb14cqc0)
 Metadata:
     Stack:
         Value: 1
@@ -17,19 +19,19 @@ Resources:
         Properties:
             AssumeRolePolicyDocument:
                 Statement:
-                  - Effect: Allow
-                    Principal:
-                        Service:
-                          - ec2.amazonaws.com
-                    Action:
-                      - sts:AssumeRole
+                - Effect: Allow
+                  Principal:
+                      Service:
+                      - ec2.amazonaws.com
+                  Action:
+                  - sts:AssumeRole
     rSysAdminProfile:
         Type: AWS::IAM::InstanceProfile
         DependsOn: rSysAdminRole
         Properties:
             Path: /
             Roles:
-              - !Ref rSysAdminRole
+            - !Ref rSysAdminRole
     rSysAdmin:
         Type: AWS::IAM::Group
         Properties:
@@ -40,36 +42,36 @@ Resources:
             PolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Effect: Allow
-                    NotAction: iam:*
-                    Resource: '*'
-                    Condition:
-                        Bool:
-                            aws:MultiFactorAuthPresent: true
-                  - Effect: Deny
-                    Action: aws-portal:*Billing
-                    Resource: '*'
-                  - Effect: Deny
-                    Action:
-                      - cloudtrail:DeleteTrail
-                      - cloudtrail:StopLogging
-                      - cloudtrail:UpdateTrail
-                    Resource: '*'
-                  - Effect: Deny
-                    Action:
-                      - kms:Create*
-                      - kms:Revoke*
-                      - kms:Enable*
-                      - kms:Get*
-                      - kms:Disable*
-                      - kms:Delete*
-                      - kms:Put*
-                      - kms:Update*
-                    Resource: '*'
+                - Effect: Allow
+                  NotAction: iam:*
+                  Resource: '*'
+                  Condition:
+                      Bool:
+                          aws:MultiFactorAuthPresent: true
+                - Effect: Deny
+                  Action: aws-portal:*Billing
+                  Resource: '*'
+                - Effect: Deny
+                  Action:
+                  - cloudtrail:DeleteTrail
+                  - cloudtrail:StopLogging
+                  - cloudtrail:UpdateTrail
+                  Resource: '*'
+                - Effect: Deny
+                  Action:
+                  - kms:Create*
+                  - kms:Revoke*
+                  - kms:Enable*
+                  - kms:Get*
+                  - kms:Disable*
+                  - kms:Delete*
+                  - kms:Put*
+                  - kms:Update*
+                  Resource: '*'
             Roles:
-              - !Ref rSysAdminRole
+            - !Ref rSysAdminRole
             Groups:
-              - !Ref rSysAdmin
+            - !Ref rSysAdmin
     rIAMAdminGroup:
         Type: AWS::IAM::Group
         Properties:
@@ -79,38 +81,38 @@ Resources:
         Properties:
             AssumeRolePolicyDocument:
                 Statement:
-                  - Effect: Allow
-                    Principal:
-                        Service:
-                          - ec2.amazonaws.com
-                    Action:
-                      - sts:AssumeRole
+                - Effect: Allow
+                  Principal:
+                      Service:
+                      - ec2.amazonaws.com
+                  Action:
+                  - sts:AssumeRole
     rIAMAdminProfile:
         Type: AWS::IAM::InstanceProfile
         DependsOn: rIAMAdminRole
         Properties:
             Path: /
             Roles:
-              - !Ref rIAMAdminRole
+            - !Ref rIAMAdminRole
     rIAMAdminPolicy:
         Type: AWS::IAM::ManagedPolicy
         Properties:
             PolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Effect: Allow
-                    Action: iam:*
-                    Resource: '*'
-                    Condition:
-                        Bool:
-                            aws:MultiFactorAuthPresent: true
-                  - Effect: Deny
-                    Action: aws-portal:*Billing
-                    Resource: '*'
+                - Effect: Allow
+                  Action: iam:*
+                  Resource: '*'
+                  Condition:
+                      Bool:
+                          aws:MultiFactorAuthPresent: true
+                - Effect: Deny
+                  Action: aws-portal:*Billing
+                  Resource: '*'
             Roles:
-              - !Ref rIAMAdminRole
+            - !Ref rIAMAdminRole
             Groups:
-              - !Ref rIAMAdminGroup
+            - !Ref rIAMAdminGroup
     rInstanceOpsGroup:
         Type: AWS::IAM::Group
         Properties:
@@ -120,77 +122,77 @@ Resources:
         Properties:
             AssumeRolePolicyDocument:
                 Statement:
-                  - Effect: Allow
-                    Principal:
-                        Service:
-                          - ec2.amazonaws.com
-                    Action:
-                      - sts:AssumeRole
+                - Effect: Allow
+                  Principal:
+                      Service:
+                      - ec2.amazonaws.com
+                  Action:
+                  - sts:AssumeRole
     rInstanceOpsProfile:
         Type: AWS::IAM::InstanceProfile
         DependsOn: rIAMAdminRole
         Properties:
             Path: /
             Roles:
-              - !Ref rInstanceOpsRole
+            - !Ref rInstanceOpsRole
     rInstanceOpsPolicy:
         Type: AWS::IAM::ManagedPolicy
         Properties:
             PolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Action: ec2:*
-                    Effect: Allow
-                    Resource: '*'
-                  - Effect: Allow
-                    Action: elasticloadbalancing:*
-                    Resource: '*'
-                  - Effect: Allow
-                    Action: cloudwatch:*
-                    Resource: '*'
-                  - Effect: Allow
-                    Action: autoscaling:*
-                    Resource: '*'
-                  - Effect: Deny
-                    Action:
-                      - ec2:CreateVpc*
-                      - ec2:DeleteVpc*
-                      - ec2:ModifyVpc*
-                      - ec2:CreateSubnet*
-                      - ec2:DeleteSubnet*
-                      - ec2:ModifySubnet*
-                      - ec2:Create*Route*
-                      - ec2:DeleteRoute*
-                      - ec2:AssociateRoute*
-                      - ec2:ReplaceRoute*
-                      - ec2:CreateVpn*
-                      - ec2:DeleteVpn*
-                      - ec2:AttachVpn*
-                      - ec2:DetachVpn*
-                      - ec2:CreateNetworkAcl*
-                      - ec2:DeleteNetworkAcl*
-                      - ec2:ReplaceNetworkAcl*
-                      - ec2:*Gateway*
-                      - ec2:*PeeringConnection*
-                    Resource: '*'
-                  - Effect: Deny
-                    Action: aws-portal:*Billing
-                    Resource: '*'
-                  - Effect: Deny
-                    Action:
-                      - kms:Create*
-                      - kms:Revoke*
-                      - kms:Enable*
-                      - kms:Get*
-                      - kms:Disable*
-                      - kms:Delete*
-                      - kms:Put*
-                      - kms:Update*
-                    Resource: '*'
+                - Action: ec2:*
+                  Effect: Allow
+                  Resource: '*'
+                - Effect: Allow
+                  Action: elasticloadbalancing:*
+                  Resource: '*'
+                - Effect: Allow
+                  Action: cloudwatch:*
+                  Resource: '*'
+                - Effect: Allow
+                  Action: autoscaling:*
+                  Resource: '*'
+                - Effect: Deny
+                  Action:
+                  - ec2:CreateVpc*
+                  - ec2:DeleteVpc*
+                  - ec2:ModifyVpc*
+                  - ec2:CreateSubnet*
+                  - ec2:DeleteSubnet*
+                  - ec2:ModifySubnet*
+                  - ec2:Create*Route*
+                  - ec2:DeleteRoute*
+                  - ec2:AssociateRoute*
+                  - ec2:ReplaceRoute*
+                  - ec2:CreateVpn*
+                  - ec2:DeleteVpn*
+                  - ec2:AttachVpn*
+                  - ec2:DetachVpn*
+                  - ec2:CreateNetworkAcl*
+                  - ec2:DeleteNetworkAcl*
+                  - ec2:ReplaceNetworkAcl*
+                  - ec2:*Gateway*
+                  - ec2:*PeeringConnection*
+                  Resource: '*'
+                - Effect: Deny
+                  Action: aws-portal:*Billing
+                  Resource: '*'
+                - Effect: Deny
+                  Action:
+                  - kms:Create*
+                  - kms:Revoke*
+                  - kms:Enable*
+                  - kms:Get*
+                  - kms:Disable*
+                  - kms:Delete*
+                  - kms:Put*
+                  - kms:Update*
+                  Resource: '*'
             Roles:
-              - !Ref rInstanceOpsRole
+            - !Ref rInstanceOpsRole
             Groups:
-              - !Ref rInstanceOpsGroup
+            - !Ref rInstanceOpsGroup
     rReadOnlyAdminGroup:
         Type: AWS::IAM::Group
         Properties:
@@ -200,19 +202,19 @@ Resources:
         Properties:
             AssumeRolePolicyDocument:
                 Statement:
-                  - Effect: Allow
-                    Principal:
-                        Service:
-                          - ec2.amazonaws.com
-                    Action:
-                      - sts:AssumeRole
+                - Effect: Allow
+                  Principal:
+                      Service:
+                      - ec2.amazonaws.com
+                  Action:
+                  - sts:AssumeRole
     rReadOnlyAdminProfile:
         Type: AWS::IAM::InstanceProfile
         DependsOn: rReadOnlyAdminRole
         Properties:
             Path: /
             Roles:
-              - !Ref rReadOnlyAdminRole
+            - !Ref rReadOnlyAdminRole
     rReadOnlyAdminPolicy:
         Type: AWS::IAM::ManagedPolicy
         DependsOn: rReadOnlyAdminProfile
@@ -220,76 +222,76 @@ Resources:
             PolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Action:
-                      - appstream:Get*
-                      - autoscaling:Describe*
-                      - cloudformation:DescribeStacks
-                      - cloudformation:DescribeStackEvents
-                      - cloudformation:DescribeStackResource
-                      - cloudformation:DescribeStackResources
-                      - cloudformation:GetTemplate
-                      - cloudformation:List*
-                      - cloudfront:Get*
-                      - cloudfront:List*
-                      - cloudtrail:DescribeTrails
-                      - cloudtrail:GetTrailStatus
-                      - cloudwatch:Describe*
-                      - cloudwatch:Get*
-                      - cloudwatch:List*
-                      - directconnect:Describe*
-                      - dynamodb:GetItem
-                      - dynamodb:BatchGetItem
-                      - dynamodb:Query
-                      - dynamodb:Scan
-                      - dynamodb:DescribeTable
-                      - dynamodb:ListTables
-                      - ec2:Describe*
-                      - elasticache:Describe*
-                      - elasticbeanstalk:Check*
-                      - elasticbeanstalk:Describe*
-                      - elasticbeanstalk:List*
-                      - elasticbeanstalk:RequestEnvironmentInfo
-                      - elasticbeanstalk:RetrieveEnvironmentInfo
-                      - elasticloadbalancing:Describe*
-                      - elastictranscoder:Read*
-                      - elastictranscoder:List*
-                      - iam:List*
-                      - iam:Get*
-                      - kinesis:Describe*
-                      - kinesis:Get*
-                      - kinesis:List*
-                      - opsworks:Describe*
-                      - opsworks:Get*
-                      - route53:Get*
-                      - route53:List*
-                      - redshift:Describe*
-                      - redshift:ViewQueriesInConsole
-                      - rds:Describe*
-                      - rds:ListTagsForResource
-                      - s3:Get*
-                      - s3:List*
-                      - sdb:GetAttributes
-                      - sdb:List*
-                      - sdb:Select*
-                      - ses:Get*
-                      - ses:List*
-                      - sns:Get*
-                      - sns:List*
-                      - sqs:GetQueueAttributes
-                      - sqs:ListQueues
-                      - sqs:ReceiveMessage
-                      - storagegateway:List*
-                      - storagegateway:Describe*
-                      - trustedadvisor:Describe*
-                    Effect: Allow
-                    Resource: '*'
-                  - Effect: Deny
-                    Action: aws-portal:*Billing
-                    Resource: '*'
+                - Action:
+                  - appstream:Get*
+                  - autoscaling:Describe*
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeStackResource
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:GetTemplate
+                  - cloudformation:List*
+                  - cloudfront:Get*
+                  - cloudfront:List*
+                  - cloudtrail:DescribeTrails
+                  - cloudtrail:GetTrailStatus
+                  - cloudwatch:Describe*
+                  - cloudwatch:Get*
+                  - cloudwatch:List*
+                  - directconnect:Describe*
+                  - dynamodb:GetItem
+                  - dynamodb:BatchGetItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:DescribeTable
+                  - dynamodb:ListTables
+                  - ec2:Describe*
+                  - elasticache:Describe*
+                  - elasticbeanstalk:Check*
+                  - elasticbeanstalk:Describe*
+                  - elasticbeanstalk:List*
+                  - elasticbeanstalk:RequestEnvironmentInfo
+                  - elasticbeanstalk:RetrieveEnvironmentInfo
+                  - elasticloadbalancing:Describe*
+                  - elastictranscoder:Read*
+                  - elastictranscoder:List*
+                  - iam:List*
+                  - iam:Get*
+                  - kinesis:Describe*
+                  - kinesis:Get*
+                  - kinesis:List*
+                  - opsworks:Describe*
+                  - opsworks:Get*
+                  - route53:Get*
+                  - route53:List*
+                  - redshift:Describe*
+                  - redshift:ViewQueriesInConsole
+                  - rds:Describe*
+                  - rds:ListTagsForResource
+                  - s3:Get*
+                  - s3:List*
+                  - sdb:GetAttributes
+                  - sdb:List*
+                  - sdb:Select*
+                  - ses:Get*
+                  - ses:List*
+                  - sns:Get*
+                  - sns:List*
+                  - sqs:GetQueueAttributes
+                  - sqs:ListQueues
+                  - sqs:ReceiveMessage
+                  - storagegateway:List*
+                  - storagegateway:Describe*
+                  - trustedadvisor:Describe*
+                  Effect: Allow
+                  Resource: '*'
+                - Effect: Deny
+                  Action: aws-portal:*Billing
+                  Resource: '*'
             Roles:
-              - !Ref rReadOnlyAdminRole
+            - !Ref rReadOnlyAdminRole
             Groups:
-              - !Ref rReadOnlyAdminGroup
+            - !Ref rReadOnlyAdminGroup
     rReadOnlyBillingGroup:
         Type: AWS::IAM::Group
         Properties:
@@ -300,14 +302,14 @@ Resources:
             PolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Effect: Allow
-                    Action: aws-portal:View*
-                    Resource: '*'
-                  - Effect: Deny
-                    Action: aws-portal:*Account
-                    Resource: '*'
+                - Effect: Allow
+                  Action: aws-portal:View*
+                  Resource: '*'
+                - Effect: Deny
+                  Action: aws-portal:*Account
+                  Resource: '*'
             Groups:
-              - !Ref rReadOnlyBillingGroup
+            - !Ref rReadOnlyBillingGroup
 Outputs:
     rSysAdmin:
         Value: !Ref rSysAdmin
@@ -319,3 +321,4 @@ Outputs:
         Value: !Ref rReadOnlyBillingGroup
     rReadOnlyAdminGroup:
         Value: !Ref rReadOnlyAdminGroup
+...

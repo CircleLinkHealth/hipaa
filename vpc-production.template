@@ -1,33 +1,44 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
-Description: 'Provides networking configuration for a standard, public facing application, separates private-public subnets and enforces traffic with NACL rules (qs-1nb14cqcl)'
+Description: Provides networking configuration for a standard, public facing application,
+    separates private-public subnets and enforces traffic with NACL rules (qs-1nb14cqcl)
 Metadata:
+    Stack:
+        Value: 2
+    VersionDate:
+        Value: 20160510
+    Identifier:
+        Value: template-vpc-production
+    Input:
+        Description: CIDR blocks, VPC names, KeyName, EC2 instance size
+    Output:
+        Description: Outputs ID of all deployed resources
     AWS::CloudFormation::Interface:
         ParameterGroups:
-          - Label:
-                default: Region Config
-            Parameters:
-              - pRegionAZ1Name
-              - pRegionAZ2Name
-          - Label:
-                default: Production VPC Config
-            Parameters:
-              - pBastionSSHCIDR
-              - pProductionVPCName
-              - pProductionCIDR
-              - pDMZSubnetACIDR
-              - pDMZSubnetBCIDR
-              - pAppPrivateSubnetACIDR
-              - pAppPrivateSubnetBCIDR
-              - pDBPrivateSubnetACIDR
-              - pDBPrivateSubnetBCIDR
-              - pEC2KeyPair
-              - pVPCTenancy
-          - Label:
-                default: AWS Quick Start Configuration
-            Parameters:
-              - QuickStartS3URL
-              - QSS3BucketName
-              - QSS3KeyPrefix
+        - Label:
+              default: Region Config
+          Parameters:
+          - pRegionAZ1Name
+          - pRegionAZ2Name
+        - Label:
+              default: Production VPC Config
+          Parameters:
+          - pBastionSSHCIDR
+          - pProductionVPCName
+          - pProductionCIDR
+          - pDMZSubnetACIDR
+          - pDMZSubnetBCIDR
+          - pAppPrivateSubnetACIDR
+          - pAppPrivateSubnetBCIDR
+          - pDBPrivateSubnetACIDR
+          - pDBPrivateSubnetBCIDR
+          - pEC2KeyPair
+          - pVPCTenancy
+        - Label:
+              default: AWS Quick Start Configuration
+          Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix
         ParameterLabels:
             pProductionVPCName:
                 default: Name of Production VPC
@@ -49,26 +60,10 @@ Metadata:
                 default: Name of existing SSH Key for NAT Instance
             pVPCTenancy:
                 default: Instance tenancy
-            QuickStartS3URL:
-                default: Quick Start URL
             QSS3BucketName:
                 default: Quick Start S3 Bucket Name
             QSS3KeyPrefix:
                 default: Quick Start S3 Key Prefix
-    Stack:
-        Value: 2
-    VersionDate:
-        Value: 20160510
-    Identifier:
-        Value: template-vpc-production
-    Input:
-        Description: CIDR blocks, VPC names, KeyName, EC2 instance size
-    Output:
-        Description: Outputs ID of all deployed resources
-Conditions:
-    cNeedNatInstance: !Equals [ false, !Ref pSupportsNatGateway ]
-    cSupportsNatGateway: !Equals [ true, !Ref pSupportsNatGateway ]
-    cEnableFlowLogs: !Not [ !Equals [ !Ref pFlowLogGroup, '' ] ]
 Parameters:
     pBastionSSHCIDR:
         Description: CIDR block to allow access to bastion SSH
@@ -124,53 +119,69 @@ Parameters:
         Type: String
         Default: default
         AllowedValues:
-          - default
-          - dedicated
+        - default
+        - dedicated
     pEnvironment:
         Description: Environment (development, test, or production)
         Type: String
         Default: development
     pSupportsNatGateway:
-        Description: Specifies whether this region supports NAT Gateway (this value is determined by the main stack if it is invoked from there)
+        Description: Specifies whether this region supports NAT Gateway (this value is
+            determined by the main stack if it is invoked from there)
         Type: String
         Default: true
     pNatAmi:
-        Description: AMI to use for the NAT intstance if the region does not support NAT Gateway (this value is determined by the main stack if it is invoked from there)
+        Description: AMI to use for the NAT intstance if the region does not support NAT
+            Gateway (this value is determined by the main stack if it is invoked from there)
         Type: String
         Default: ''
     pNatInstanceType:
-        Description: Instance type to use for the NAT intstance if the region does not support NAT Gateway (this value is determined by the main stack if it is invoked from there)
+        Description: Instance type to use for the NAT intstance if the region does not
+            support NAT Gateway (this value is determined by the main stack if it is invoked
+            from there)
         Type: String
         Default: ''
     pFlowLogGroup:
-          Description: Log Group for capturing VPC Flow Logs
-          Type: String
-          Default: ''
-    QuickStartS3URL:
-        Description: Quick Start S3 URL prefix.
-        Default: https://s3.amazonaws.com
+        Description: Log Group for capturing VPC Flow Logs
         Type: String
+        Default: ''
     QSS3BucketName:
         AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z\-\.]*[0-9a-zA-Z])*$
         ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-            letters, uppercase letters, periods (.), and hyphens (-). It cannot start or end with a hyphen
-            (-).
-        Default: quickstart-reference
+            letters, uppercase letters, periods (.), and hyphens (-). It cannot start or
+            end with a hyphen (-).
+        Default: aws-quickstart
         Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-            can include numbers, lowercase letters, uppercase letters, periods (.), and hyphens (-).
-            It cannot start or end with a hyphen (-).
+            can include numbers, lowercase letters, uppercase letters, periods (.), and
+            hyphens (-). It cannot start or end with a hyphen (-).
         Type: String
     QSS3KeyPrefix:
-        AllowedPattern: ^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$
+        AllowedPattern: ^[0-9a-zA-Z-/]*$
         ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-            uppercase letters, hyphens (-), and forward slash (/). It cannot start or end
-            with forward slash (/) because they are automatically appended.
-        Default: quickstart-enterprise-accelerator-nist
+            uppercase letters, hyphens (-), and forward slash (/).
+        Default: quickstart-compliance-nist/
         Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
             can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-            forward slash (/). It cannot start or end with forward slash (/) because they
-            are automatically appended.
+            forward slash (/).
         Type: String
+Conditions:
+    cGovCloudCondition:
+      !Equals
+    - !Ref AWS::Region
+    - us-gov-west-1
+    cNeedNatInstance:
+      !Equals
+    - false
+    - !Ref pSupportsNatGateway
+    cSupportsNatGateway:
+      !Equals
+    - true
+    - !Ref pSupportsNatGateway
+    cEnableFlowLogs:
+      !Not
+    - !Equals
+        - !Ref pFlowLogGroup
+        - ''
 Resources:
     rVPCProduction:
         Type: AWS::EC2::VPC
@@ -180,59 +191,59 @@ Resources:
             EnableDnsSupport: true
             EnableDnsHostnames: true
             Tags:
-              - Key: Name
-                Value: !Ref pProductionVPCName
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: !Ref pProductionVPCName
+            - Key: Environment
+              Value: !Ref pEnvironment
     rSecurityGroupVpcNat:
         Type: AWS::EC2::SecurityGroup
         Properties:
             GroupDescription: Allow NAT from production
             VpcId: !Ref rVPCProduction
             SecurityGroupIngress:
-              - IpProtocol: tcp
-                FromPort: 80
-                ToPort: 80
-                CidrIp: !Ref pProductionCIDR
-              - IpProtocol: tcp
-                FromPort: 443
-                ToPort: 443
-                CidrIp: !Ref pProductionCIDR
+            - IpProtocol: tcp
+              FromPort: 80
+              ToPort: 80
+              CidrIp: !Ref pProductionCIDR
+            - IpProtocol: tcp
+              FromPort: 443
+              ToPort: 443
+              CidrIp: !Ref pProductionCIDR
             Tags:
-              - Key: Name
-                Value: sg-web-access-ports-from-production
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: sg-web-access-ports-from-production
+            - Key: Environment
+              Value: !Ref pEnvironment
     rSecurityGroupMgmtBastion:
         Type: AWS::EC2::SecurityGroup
         Properties:
             GroupDescription: Allow Bastion from Management Network
             VpcId: !Ref rVPCProduction
             SecurityGroupIngress:
-              - IpProtocol: tcp
-                FromPort: 22
-                ToPort: 22
-                CidrIp: !Ref pBastionSSHCIDR
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Ref pBastionSSHCIDR
             Tags:
-              - Key: Name
-                Value: sg-ssh-access-from-management-vpc
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: sg-ssh-access-from-management-vpc
+            - Key: Environment
+              Value: !Ref pEnvironment
     rSecurityGroupSSHFromProd:
         Type: AWS::EC2::SecurityGroup
         Properties:
             GroupDescription: Enable SSH access via port 22
             VpcId: !Ref rVPCProduction
             SecurityGroupIngress:
-              - IpProtocol: tcp
-                FromPort: 22
-                ToPort: 22
-                CidrIp: !Ref pProductionCIDR
+            - IpProtocol: tcp
+              FromPort: 22
+              ToPort: 22
+              CidrIp: !Ref pProductionCIDR
             Tags:
-              - Key: Name
-                Value: sg-enable-ssh-access
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: sg-enable-ssh-access
+            - Key: Environment
+              Value: !Ref pEnvironment
     rDMZSubnetA:
         Type: AWS::EC2::Subnet
         Properties:
@@ -240,10 +251,10 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ1Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production DMZ Subnet A
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production DMZ Subnet A
+            - Key: Environment
+              Value: !Ref pEnvironment
     rDMZSubnetB:
         Type: AWS::EC2::Subnet
         Properties:
@@ -251,10 +262,10 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ2Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production DMZ Subnet B
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production DMZ Subnet B
+            - Key: Environment
+              Value: !Ref pEnvironment
     rAppPrivateSubnetA:
         Type: AWS::EC2::Subnet
         Properties:
@@ -262,10 +273,10 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ1Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production App Subnet A
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production App Subnet A
+            - Key: Environment
+              Value: !Ref pEnvironment
     rAppPrivateSubnetB:
         Type: AWS::EC2::Subnet
         Properties:
@@ -273,10 +284,10 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ2Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production App Subnet B
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production App Subnet B
+            - Key: Environment
+              Value: !Ref pEnvironment
     rDBPrivateSubnetA:
         Type: AWS::EC2::Subnet
         Properties:
@@ -284,10 +295,10 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ1Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production DB Subnet A
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production DB Subnet A
+            - Key: Environment
+              Value: !Ref pEnvironment
     rDBPrivateSubnetB:
         Type: AWS::EC2::Subnet
         Properties:
@@ -295,18 +306,18 @@ Resources:
             AvailabilityZone: !Ref pRegionAZ2Name
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production DB Subnet B
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: Production DB Subnet B
+            - Key: Environment
+              Value: !Ref pEnvironment
     rIGWProd:
         Type: AWS::EC2::InternetGateway
         Properties:
             Tags:
-              - Key: Name
-                Value: igw-production
-              - Key: Environment
-                Value: !Ref pEnvironment
+            - Key: Name
+              Value: igw-production
+            - Key: Environment
+              Value: !Ref pEnvironment
     rNACLPublic:
         Type: AWS::EC2::NetworkAcl
         Properties:
@@ -320,8 +331,8 @@ Resources:
         Properties:
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production DMZ Route
+            - Key: Name
+              Value: Production DMZ Route
     rEIPProdNatA:
         Type: AWS::EC2::EIP
         Properties:
@@ -348,7 +359,14 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: cNeedNatInstance
         Properties:
-            TemplateURL: !Sub ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/nat-instance.template
+            TemplateURL:
+              !Sub
+            - https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-compliance-common/templates/nat-instance.template
+            - QSS3Region:
+                !If
+              - cGovCloudCondition
+              - s3-us-gov-west-1
+              - s3
             TimeoutInMinutes: 20
             Parameters:
                 pDMZSubnetA: !Ref rDMZSubnetA
@@ -418,15 +436,15 @@ Resources:
         Properties:
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production Private Route A
+            - Key: Name
+              Value: Production Private Route A
     rRouteTableProdPrivateB:
         Type: AWS::EC2::RouteTable
         Properties:
             VpcId: !Ref rVPCProduction
             Tags:
-              - Key: Name
-                Value: Production Private Route B
+            - Key: Name
+              Value: Production Private Route B
     rNACLRuleAllowAllTCPInternal:
         Type: AWS::EC2::NetworkAclEntry
         Properties:
@@ -606,25 +624,25 @@ Resources:
             AssumeRolePolicyDocument:
                 Version: 2012-10-17
                 Statement:
-                  - Sid: AllowFlowLogs
-                    Effect: Allow
-                    Principal:
-                        Service: vpc-flow-logs.amazonaws.com
-                    Action: sts:AssumeRole
+                - Sid: AllowFlowLogs
+                  Effect: Allow
+                  Principal:
+                      Service: vpc-flow-logs.amazonaws.com
+                  Action: sts:AssumeRole
             Path: /
             Policies:
-              - PolicyName: cloudwatchlogsrole
-                PolicyDocument:
-                    Version: 2012-10-17
-                    Statement:
-                      - Action:
-                          - logs:CreateLogGroup
-                          - logs:CreateLogStream
-                          - logs:PutLogEvents
-                          - logs:DescribeLogGroups
-                          - logs:DescribeLogStreams
-                        Effect: Allow
-                        Resource: '*'
+            - PolicyName: cloudwatchlogsrole
+              PolicyDocument:
+                  Version: 2012-10-17
+                  Statement:
+                  - Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                    - logs:DescribeLogGroups
+                    - logs:DescribeLogStreams
+                    Effect: Allow
+                    Resource: '*'
     rProductionVpcFlowLog:
         Condition: cEnableFlowLogs
         Type: AWS::EC2::FlowLog
@@ -668,3 +686,4 @@ Outputs:
         Value: !Ref rSecurityGroupSSHFromProd
     rSecurityGroupVpcNat:
         Value: !Ref rSecurityGroupVpcNat
+...
