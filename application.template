@@ -1,8 +1,9 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Provides nesting for required stacks to deploy a full sample web application
-  with reverse proxy, ELBs, IAM, and other resources (for demonstration/POC/testing)
-  QS(5026)
+Description: >-
+  Provides nesting for required stacks to deploy a full sample web application
+  with reverse proxy, ELBs, IAM, and other resources (for
+  demonstration/POC/testing) QS(5026)
 Metadata:
   Stack:
     Value: 3
@@ -11,11 +12,12 @@ Metadata:
   Identifier:
     Value: template-application
   Input:
-    Description: VPC, SubnetIDs, S3 bucket names, CIDR blocks, KeyNames, AMIs, DB
-      name and password
+    Description: >-
+      VPC, SubnetIDs, S3 bucket names, CIDR blocks, KeyNames, AMIs, DB name and
+      password
   Output:
     Description: Outputs ID of all deployed resources
-  AWS::CloudFormation::Interface:
+  'AWS::CloudFormation::Interface':
     ParameterGroups:
     - Label:
         default: Region Config
@@ -73,24 +75,25 @@ Parameters:
     Type: String
   pProductionVPC:
     Description: Production VPC
-    Type: AWS::EC2::VPC::Id
+    Type: 'AWS::EC2::VPC::Id'
   pBastionSSHCIDR:
-    Description: CIDR block (optional) of Public IPs allowed to access Bastion instance
-      in this deployment
+    Description: >-
+      CIDR block (optional) of Public IPs allowed to access Bastion instance in
+      this deployment
     Type: String
     Default: 0.0.0.0/0
   pDMZSubnetA:
     Description: DMZ Subnet A
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pDMZSubnetB:
     Description: DMZ Subnet B
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pAppPrivateSubnetA:
     Description: WebApp Subnet A
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pAppPrivateSubnetB:
     Description: WebApp Subnet A
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pWebInstanceType:
     Description: Instance type for the webservers
     Type: String
@@ -99,18 +102,18 @@ Parameters:
     Type: String
   pDBPrivateSubnetA:
     Description: rDBPrivateSubnetA
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pDBPrivateSubnetB:
     Description: rDBPrivateSubnetB
-    Type: AWS::EC2::Subnet::Id
+    Type: 'AWS::EC2::Subnet::Id'
   pRegionAZ1Name:
     Description: rDBPrivateSubnetB
-    Type: AWS::EC2::AvailabilityZone::Name
+    Type: 'AWS::EC2::AvailabilityZone::Name'
   pRegionAZ2Name:
     Description: rDBPrivateSubnetB
-    Type: AWS::EC2::AvailabilityZone::Name
+    Type: 'AWS::EC2::AvailabilityZone::Name'
   pWebServerAMI:
-    Description: Which webserver AMI do you want to use, default
+    Description: 'Which webserver AMI do you want to use, default'
     Type: String
     Default: none
   pAppAmi:
@@ -137,42 +140,54 @@ Parameters:
     Description: Allocated Storage (in GB) for RDS instance
     Type: String
   pEnvironment:
-    Description: Environment type (development, test, or production)
+    Description: 'Environment type (development, test, or production)'
     Type: String
     Default: development
   pSupportsGlacier:
-    Description: Determines whether this region supports Glacier (passed in from main
+    Description: >-
+      Determines whether this region supports Glacier (passed in from main
       template)
     Type: String
     Default: 'true'
   QSS3BucketName:
-    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$
-    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, periods (.), and hyphens (-). It cannot start or
-      end with a hyphen (-).
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-.]*[0-9a-zA-Z])*$'
+    ConstraintDescription: >-
+      Quick Start bucket name can include numbers, lowercase letters, uppercase
+      letters, periods (.), and hyphens (-). It cannot start or end with a
+      hyphen (-).
     Default: aws-quickstart
-    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
+    Description: >-
+      S3 bucket name for the Quick Start assets. Quick Start bucket name can
+      include numbers, lowercase letters, uppercase letters, and hyphens (-). It
+      cannot start or end with a hyphen (-).
     Type: String
   QSS3KeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
+    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    ConstraintDescription: >-
+      Quick Start key prefix can include numbers, lowercase letters, uppercase
+      letters, hyphens (-), and forward slash (/).
     Default: quickstart-compliance-hipaa/
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+    Description: >-
+      S3 key prefix for the Quick Start assets. Quick Start key prefix can
+      include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
     Type: String
   QSS3SSLKeyPrefix:
-    AllowedPattern: ^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$
-    ConstraintDescription: Quick Start SSL key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.
+    AllowedPattern: '^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$'
+    ConstraintDescription: >-
+      Quick Start SSL key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/). It cannot start or
+      end with forward slash (/) because they are automatically appended.
     Default: enterprise-accelerator/hipaa/latest
-    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.
+    Description: >-
+      S3 key prefix for the Quick Start assets. Quick Start key prefix can
+      include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/). It cannot start or end with forward slash (/) because
+      they are automatically appended.
     Type: String
   QuickStartS3URL:
     Description: Quick Start S3 URL prefix.
-    Default: https://s3.amazonaws.com
+    Default: 'https://s3.amazonaws.com'
     Type: String
 Mappings:
   elbMap:
@@ -189,7 +204,7 @@ Mappings:
     ca-central-1:
       ELB: '985666609251'
     eu-central-1:
-      ELB: '054676820928'
+      ELB: 054676820928
     eu-west-1:
       ELB: '156460612806'
     eu-west-2:
@@ -199,30 +214,28 @@ Mappings:
     us-east-1:
       ELB: '127311923021'
     us-east-2:
-      ELB: '033677994240'
+      ELB: 033677994240
     us-gov-west-1:
-      ELB: '048591011584'
+      ELB: 048591011584
     us-west-1:
-      ELB: '027434742980'
+      ELB: 027434742980
     us-west-2:
       ELB: '797873946194'
 Conditions:
-  GovCloudCondition:
-    !Equals
-    - !Ref AWS::Region
-    - us-gov-west-1
-  SupportsGlacier:
-    !Equals
-    - !Ref pSupportsGlacier
-    - 'true'
+  GovCloudCondition: !Equals
+  - !Ref 'AWS::Region'
+  - us-gov-west-1
+  SupportsGlacier: !Equals
+  - !Ref pSupportsGlacier
+  - 'true'
 Resources:
   rS3ELBAccessLogs:
-    Type: AWS::S3::Bucket
+    Type: 'AWS::S3::Bucket'
     DeletionPolicy: Retain
     Properties:
       AccessControl: Private
   rS3AccessLogsPolicy:
-    Type: AWS::S3::BucketPolicy
+    Type: 'AWS::S3::BucketPolicy'
     DeletionPolicy: Retain
     Properties:
       Bucket: !Ref rS3ELBAccessLogs
@@ -231,24 +244,22 @@ Resources:
         Statement:
         - Sid: ELBAccessLogs20130930
           Effect: Allow
-          Resource:
-            !Sub
-            - arn:${Partition}:s3:::${rS3ELBAccessLogs}/Logs/AWSLogs/${AWS::AccountId}/*
-            - Partition:
-                !If
-                - GovCloudCondition
-                - aws-us-gov
-                - aws
+          Resource: !Sub
+          - >-
+            arn:${Partition}:s3:::${rS3ELBAccessLogs}/Logs/AWSLogs/${AWS::AccountId}/*
+          - Partition: !If
+            - GovCloudCondition
+            - aws-us-gov
+            - aws
           Principal:
-            AWS:
-              !FindInMap
-              - elbMap
-              - !Ref AWS::Region
-              - ELB
+            AWS: !FindInMap
+            - elbMap
+            - !Ref 'AWS::Region'
+            - ELB
           Action:
-          - s3:PutObject
+          - 's3:PutObject'
   rSecurityGroupWeb:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Security group for Reverse Proxy in DMZ
       VpcId: !Ref pProductionVPC
@@ -272,7 +283,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rSecurityGroupWebInstance:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Security group for Reverse Proxy Instances in DMZ
       VpcId: !Ref pProductionVPC
@@ -308,7 +319,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rSecurityGroupApp:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Security group for Appservers ELB
       VpcId: !Ref pProductionVPC
@@ -332,7 +343,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rSecurityGroupAppInstance:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Security group for Appserver Instances
       VpcId: !Ref pProductionVPC
@@ -372,7 +383,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rSecurityGroupRDS:
-    Type: AWS::EC2::SecurityGroup
+    Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Port 3306 database for access
       VpcId: !Ref pProductionVPC
@@ -387,7 +398,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rWebContentBucket:
-    Type: AWS::S3::Bucket
+    Type: 'AWS::S3::Bucket'
     Properties:
       AccessControl: Private
       LifecycleConfiguration:
@@ -397,68 +408,62 @@ Resources:
           ExpirationInDays: 2555
           Transition:
             TransitionInDays: 90
-            StorageClass:
-              !If
-              - SupportsGlacier
-              - GLACIER
-              - STANDARD_IA
+            StorageClass: !If
+            - SupportsGlacier
+            - GLACIER
+            - STANDARD_IA
       VersioningConfiguration:
         Status: Enabled
     DeletionPolicy: Delete
   rWebContentS3Policy:
-    Type: AWS::S3::BucketPolicy
+    Type: 'AWS::S3::BucketPolicy'
     DependsOn: rWebContentBucket
     Properties:
       Bucket: !Ref rWebContentBucket
       PolicyDocument:
         Statement:
         - Sid: EnforceSecureTransport
-          Action: s3:*
+          Action: 's3:*'
           Effect: Deny
           Principal: '*'
-          Resource:
-            !Sub
-            - arn:${Partition}:s3:::${rWebContentBucket}
-            - Partition:
-                !If
-                - GovCloudCondition
-                - aws-us-gov
-                - aws
+          Resource: !Sub
+          - 'arn:${Partition}:s3:::${rWebContentBucket}'
+          - Partition: !If
+            - GovCloudCondition
+            - aws-us-gov
+            - aws
           Condition:
             Bool:
-              aws:SecureTransport: 'false'
+              'aws:SecureTransport': 'false'
         - Sid: EnforceEncryptionOnPut
           Effect: Deny
           Principal: '*'
-          Action: s3:PutObject
-          Resource:
-            !Sub
-            - arn:${Partition}:s3:::${rWebContentBucket}/*
-            - Partition:
-                !If
-                - GovCloudCondition
-                - aws-us-gov
-                - aws
+          Action: 's3:PutObject'
+          Resource: !Sub
+          - 'arn:${Partition}:s3:::${rWebContentBucket}/*'
+          - Partition: !If
+            - GovCloudCondition
+            - aws-us-gov
+            - aws
           Condition:
             StringNotEquals:
-              s3:x-amz-server-side-encryption: AES256
+              's3:x-amz-server-side-encryption': AES256
   rDBSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
+    Type: 'AWS::RDS::DBSubnetGroup'
     Properties:
       DBSubnetGroupDescription: MySQL RDS Subnet Group
       SubnetIds:
       - !Ref pDBPrivateSubnetA
       - !Ref pDBPrivateSubnetB
   rRDSInstance:
-    Type: AWS::RDS::DBInstance
+    Type: 'AWS::RDS::DBInstance'
     DependsOn:
     - rDBSubnetGroup
     - rSecurityGroupRDS
     Properties:
-      DBInstanceIdentifier:
-          !Sub
-          - ${Environment}-dbinstance
-          - Environment: !Ref pEnvironment
+      DBInstanceIdentifier: !Sub
+      - '${Environment}-dbinstance'
+      - Environment: !Ref pEnvironment
       DBName: !Ref pDBName
       Engine: !Ref pDBEngine
       MultiAZ: true
@@ -471,7 +476,7 @@ Resources:
       - !Ref rSecurityGroupRDS
       DBSubnetGroupName: !Ref rDBSubnetGroup
   rELBApp:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     DependsOn:
     - rS3ELBAccessLogs
     - rSecurityGroupApp
@@ -481,11 +486,11 @@ Resources:
       - !Ref pAppPrivateSubnetA
       - !Ref pAppPrivateSubnetB
       HealthCheck:
-        HealthyThreshold: "2"
-        Interval: "15"
-        Target: TCP:443
-        Timeout: "5"
-        UnhealthyThreshold: "3"
+        HealthyThreshold: '2'
+        Interval: '15'
+        Target: 'TCP:443'
+        Timeout: '5'
+        UnhealthyThreshold: '3'
       AccessLoggingPolicy:
         S3BucketName: !Ref rS3ELBAccessLogs
         S3BucketPrefix: Logs
@@ -494,12 +499,12 @@ Resources:
       SecurityGroups:
       - !Ref rSecurityGroupApp
       Listeners:
-      - InstancePort: "80"
-        LoadBalancerPort: "80"
+      - InstancePort: '80'
+        LoadBalancerPort: '80'
         Protocol: TCP
         InstanceProtocol: TCP
-      - InstancePort: "443"
-        LoadBalancerPort: "443"
+      - InstancePort: '443'
+        LoadBalancerPort: '443'
         Protocol: TCP
         InstanceProtocol: TCP
       Scheme: internal
@@ -509,7 +514,7 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rELBWeb:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     DependsOn:
     - rS3ELBAccessLogs
     - rSecurityGroupWeb
@@ -519,11 +524,11 @@ Resources:
       - !Ref pDMZSubnetA
       - !Ref pDMZSubnetB
       HealthCheck:
-        HealthyThreshold: "2"
-        Interval: "30"
-        Target: TCP:443
-        Timeout: "5"
-        UnhealthyThreshold: "5"
+        HealthyThreshold: '2'
+        Interval: '30'
+        Target: 'TCP:443'
+        Timeout: '5'
+        UnhealthyThreshold: '5'
       AccessLoggingPolicy:
         S3BucketName: !Ref rS3ELBAccessLogs
         S3BucketPrefix: Logs
@@ -532,12 +537,12 @@ Resources:
       SecurityGroups:
       - !Ref rSecurityGroupWeb
       Listeners:
-      - InstancePort: "80"
-        LoadBalancerPort: "80"
+      - InstancePort: '80'
+        LoadBalancerPort: '80'
         Protocol: TCP
         InstanceProtocol: TCP
-      - InstancePort: "443"
-        LoadBalancerPort: "443"
+      - InstancePort: '443'
+        LoadBalancerPort: '443'
         Protocol: TCP
         InstanceProtocol: TCP
       Tags:
@@ -546,12 +551,12 @@ Resources:
       - Key: Environment
         Value: !Ref pEnvironment
   rS3AssetsBucket:
-    Type: AWS::S3::Bucket
+    Type: 'AWS::S3::Bucket'
     DeletionPolicy: Retain
     Properties:
       AccessControl: Private
   rPreProcInstanceRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -561,7 +566,7 @@ Resources:
             Service:
             - ec2.amazonaws.com
           Action:
-          - sts:AssumeRole
+          - 'sts:AssumeRole'
       Path: /
       Policies:
       - PolicyName: PreProcPermissions
@@ -571,29 +576,30 @@ Resources:
           - Sid: UploadServerCertificate
             Effect: Allow
             Action:
-            - s3:PutObject
-            Resource:
-              !Sub
-              - arn:${Partition}:s3:::${rS3AssetsBucket}/*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+            - 's3:PutObject'
+            Resource: !Sub
+            - 'arn:${Partition}:s3:::${rS3AssetsBucket}/*'
+            - Partition: !If
+              - GovCloudCondition
+              - aws-us-gov
+              - aws
           - Sid: SelfDestruct
             Effect: Allow
             Action:
-            - ec2:TerminateInstances
+            - 'ec2:TerminateInstances'
             Resource:
             - '*'
   rPreProcInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
       Roles:
       - !Ref rPreProcInstanceRole
   rPreProcInstance:
-    Type: AWS::EC2::Instance
+    Type: 'AWS::EC2::Instance'
+    DependsOn:
+      - rAutoScalingGroupApp
+      - rAutoScalingGroupWeb
     Properties:
       KeyName: !Ref pEC2KeyPair
       ImageId: !Ref pWebServerAMI
@@ -602,8 +608,8 @@ Resources:
       SubnetId: !Ref pAppPrivateSubnetA
       SecurityGroupIds:
       - !Ref rSecurityGroupAppInstance
-      UserData:
-        Fn::Base64: !Sub |
+      UserData: !Base64
+        'Fn::Sub': >
           #!/bin/bash -xe
 
           echo Force S3 to use Sigv4
@@ -612,15 +618,6 @@ Resources:
           echo Configure the region, necessary especially for GovCloud
           aws configure set region ${AWS::Region}
 
-          echo Generating private certificate...
-          sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/common.key -out /tmp/common.crt -subj "/C=US/ST=Washington/L=Seattle/O=NonProductionTestCert/CN=NonProductionTestCert"
-
-          echo Uploading key to assets bucket...
-          aws s3api put-object --bucket ${rS3AssetsBucket} --key ssl/common.key --body /tmp/common.key
-
-          echo Uploading cert to assets bucket...
-          aws s3api put-object --bucket ${rS3AssetsBucket} --key ssl/common.crt --body /tmp/common.crt
-
           echo Signal for success
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rPreProcInstance --region ${AWS::Region}
 
@@ -628,7 +625,7 @@ Resources:
           sleep 120
 
           echo Self-destruct!
-          aws ec2 terminate-instances --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --region ${AWS::Region}
+          aws ec2 terminate-instances --instance-id $(curl -s  http://169.254.169.254/latest/meta-data/instance-id) --region ${AWS::Region}
       Tags:
       - Key: Name
         Value: PreProcessor
@@ -636,7 +633,7 @@ Resources:
       ResourceSignal:
         Timeout: PT10M
   rWebInstanceRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -646,7 +643,7 @@ Resources:
             Service:
             - ec2.amazonaws.com
           Action:
-          - sts:AssumeRole
+          - 'sts:AssumeRole'
       Path: /
       Policies:
       - PolicyName: S3Assets
@@ -656,43 +653,41 @@ Resources:
           - Sid: GetServerCertificate
             Effect: Allow
             Action:
-            - s3:Get*
-            - s3:List*
-            - s3:Head*
+            - 's3:Get*'
+            - 's3:List*'
+            - 's3:Head*'
             Resource:
             - !Sub
-              - arn:${Partition}:s3:::${rS3AssetsBucket}/*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${rS3AssetsBucket}/*'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
             - !Sub
-              - arn:${Partition}:s3:::${rS3AssetsBucket}
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${rS3AssetsBucket}'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
           - Sid: DescribeVolumes
             Effect: Allow
             Action:
-            - ec2:DescribeVolumes
+            - 'ec2:DescribeVolumes'
             Resource: '*'
   rWebInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
       Roles:
       - !Ref rWebInstanceRole
   rAutoScalingConfigWeb:
-    Type: AWS::AutoScaling::LaunchConfiguration
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
     DependsOn:
     - rELBApp
     - rAutoScalingGroupApp
     - rPreProcInstance
     Metadata:
-      AWS::CloudFormation::Init:
+      'AWS::CloudFormation::Init':
         config:
           packages:
             yum:
@@ -733,16 +728,25 @@ Resources:
               group: root
           commands:
             01-nginx-setup:
-              command: |
+              command: >
                 #!/bin/bash
                 ## Nginx setup
                 sleep 5
-                echo 'Replace resolver placeholder with /etc/resolv.conf nameservers'
-                sed -i "s/xxxxx/$(grep ^nameserver /etc/resolv.conf | sed 's/^nameserver//' | tr -d '\n')/" /tmp/nginx/default.conf
+
+                echo 'Replace resolver placeholder with /etc/resolv.conf
+                nameservers'
+
+                sed -i "s/xxxxx/$(grep ^nameserver /etc/resolv.conf | sed
+                's/^nameserver//' | tr -d '\n')/" /tmp/nginx/default.conf
+
                 cp /tmp/nginx/default.conf /etc/nginx/conf.d/default.conf
+
                 service nginx stop
+
                 sed -i '/default_server;/d' /etc/nginx/nginx.conf
+
                 sleep 10
+
                 service nginx restart
           services:
             sysvinit:
@@ -765,24 +769,25 @@ Resources:
       KeyName: !Ref pEC2KeyPair
       SecurityGroups:
       - !Ref rSecurityGroupWebInstance
-      UserData:
-        Fn::Base64: !Sub |
+      UserData: !Base64
+        'Fn::Sub': >
           #!/bin/bash
           yum update -y
 
           # install SSL cert common key
           yum -y install mod_ssl
-
           aws configure set default.s3.signature_version s3v4
-          aws s3 cp s3://${rS3AssetsBucket}/ssl/common.crt /etc/ssl/certs/common.crt --region ${AWS::Region}
-          aws s3 cp s3://${rS3AssetsBucket}/ssl/common.key /etc/ssl/private/common.key --region ${AWS::Region}
+          aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.crt /etc/ssl/certs/common.crt --region ${AWS::Region}
+          aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.key /etc/ssl/private/common.key --region ${AWS::Region}
 
           EC2_INSTANCE_ID=$(curl -s http://instance-data/latest/meta-data/instance-id)
 
           ######################################################################
-          # Volume /dev/sdh (which will get created as /dev/xvdh on Amazon Linux)
 
+          # Volume /dev/sdh (which will get created as /dev/xvdh on Amazon
+          Linux)
           DATA_STATE="unknown"
+
           until [ "${!DATA_STATE}" == "attached" ]; do
             DATA_STATE=$(aws ec2 describe-volumes \
             --region ${AWS::Region} \
@@ -795,28 +800,41 @@ Resources:
             sleep 5
           done
 
+
           # Format /dev/xvdh if it does not contain a partition yet
           if [ "$(file -b -s /dev/xvdh)" == "data" ]; then
             mkfs -t ext4 /dev/xvdh
           fi
 
+
           mkdir -p /data
+
           mount /dev/xvdh /data
+
 
           # Persist the volume in /etc/fstab so it gets mounted again
           echo '/dev/xvdh /data ext4 defaults,nofail 0 2' >> /etc/fstab
 
-          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource rAutoScalingConfigWeb --region ${AWS::Region}
+
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource
+          rAutoScalingConfigWeb --region ${AWS::Region}
+
 
           ## Nginx setup
+
           sleep 5
+
           cp /tmp/nginx/default.conf /etc/nginx/conf.d/default.conf
+
           service nginx stop
+
           sed -i '/default_server;/d' /etc/nginx/nginx.conf
+
           sleep 10
+
           service nginx restart
   rAutoScalingGroupWeb:
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
     DependsOn: rAutoScalingConfigWeb
     Properties:
       AvailabilityZones:
@@ -826,8 +844,8 @@ Resources:
       - !Ref pDMZSubnetA
       - !Ref pDMZSubnetB
       LaunchConfigurationName: !Ref rAutoScalingConfigWeb
-      MinSize: "2"
-      MaxSize: "4"
+      MinSize: '2'
+      MaxSize: '4'
       LoadBalancerNames:
       - !Ref rELBWeb
       HealthCheckType: ELB
@@ -840,27 +858,26 @@ Resources:
         Value: !Ref pEnvironment
         PropagateAtLaunch: true
   rAutoScalingUpWeb:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rAutoScalingGroupWeb
-      Cooldown: "500"
+      Cooldown: '500'
       ScalingAdjustment: 1
   rAutoScalingDownWeb:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rAutoScalingGroupWeb
-      Cooldown: "500"
+      Cooldown: '500'
       ScalingAdjustment: -1
   rCWAlarmHighCPUWeb:
-    Type: AWS::CloudWatch::Alarm
+    Type: 'AWS::CloudWatch::Alarm'
     Properties:
       EvaluationPeriods: 1
       Statistic: Average
       Threshold: 50
-      AlarmDescription: Alarm if CPU too high or metric disappears indicating instance
-        is down
+      AlarmDescription: Alarm if CPU too high or metric disappears indicating instance is down
       Period: 60
       AlarmActions:
       - !Ref rAutoScalingUpWeb
@@ -871,13 +888,13 @@ Resources:
       ComparisonOperator: GreaterThanThreshold
       MetricName: CPUUtilization
   rCWAlarmLowCPUWeb:
-    Type: AWS::CloudWatch::Alarm
+    Type: 'AWS::CloudWatch::Alarm'
     DependsOn: rAutoScalingGroupWeb
     Properties:
       EvaluationPeriods: 1
       Statistic: Average
       Threshold: 10
-      AlarmDescription: Alarm if CPU too low, remove a web server
+      AlarmDescription: 'Alarm if CPU too low, remove a web server'
       Period: 60
       AlarmActions:
       - !Ref rAutoScalingDownWeb
@@ -888,7 +905,7 @@ Resources:
       ComparisonOperator: LessThanThreshold
       MetricName: CPUUtilization
   rAppInstanceRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -898,7 +915,7 @@ Resources:
             Service:
             - ec2.amazonaws.com
           Action:
-          - sts:AssumeRole
+          - 'sts:AssumeRole'
       Path: /
       Policies:
       - PolicyName: S3Assets
@@ -908,63 +925,59 @@ Resources:
           - Sid: GetServerCertificate
             Effect: Allow
             Action:
-            - s3:Get*
-            - s3:List*
-            - s3:Head*
+            - 's3:Get*'
+            - 's3:List*'
+            - 's3:Head*'
             Resource:
             - !Sub
-              - arn:${Partition}:s3:::${rS3AssetsBucket}/*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${rS3AssetsBucket}/*'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
             - !Sub
-              - arn:${Partition}:s3:::${rS3AssetsBucket}
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${rS3AssetsBucket}'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
             - !Sub
-              - arn:${Partition}:s3:::${QSS3BucketName}
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${QSS3BucketName}'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
             - !Sub
-              - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}/*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - 'arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}/*'
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
             - !Sub
-              - arn:${Partition}:s3:::${QSS3BucketName}/${QSS3SSLKeyPrefix}/*
-              - Partition:
-                  !If
-                  - GovCloudCondition
-                  - aws-us-gov
-                  - aws
+              - >-
+                arn:${Partition}:s3:::${QSS3BucketName}/${QSS3SSLKeyPrefix}/*
+              - Partition: !If
+                - GovCloudCondition
+                - aws-us-gov
+                - aws
           - Sid: DescribeVolumes
             Effect: Allow
             Action:
-            - ec2:DescribeVolumes
+            - 'ec2:DescribeVolumes'
             Resource: '*'
   rAppInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
       Roles:
       - !Ref rAppInstanceRole
   rAutoScalingConfigApp:
-    Type: AWS::AutoScaling::LaunchConfiguration
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
     DependsOn:
     - rRDSInstance
     - rPreProcInstance
     Metadata:
-      AWS::CloudFormation::Init:
+      'AWS::CloudFormation::Init':
         configSets:
           webserver_install:
           - install_cfn
@@ -981,10 +994,13 @@ Resources:
               owner: root
               group: root
             /etc/cfn/hooks.d/cfn-auto-reloader.conf:
-              content: !Sub |
+              content: !Sub >
                 [cfn-auto-reloader-hook]
+
                 triggers=post.update
+
                 path=Resources.rAutoScalingConfigApp.Metadata.AWS::CloudFormation::Init
+
                 action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource rAutoScalingGroupApp --configsets webserver_install --region ${AWS::Region}
               mode: '000400'
               owner: root
@@ -1042,72 +1058,92 @@ Resources:
       KeyName: !Ref pEC2KeyPair
       SecurityGroups:
       - !Ref rSecurityGroupAppInstance
-      UserData:
-        Fn::Base64:
-          !Sub
-          - |
-            #!/bin/bash -x
+      UserData: !Base64
+        'Fn::Sub':
+        - >
+          #!/bin/bash -x
 
-            yum update -y
-            yum -y install mod_ssl
 
-            # install codedeploy agent
-            sudo yum -y install ruby
-            sudo yum -y install wget
-            cd /home/ec2-user/
-            sudo wget https://aws-codedeploy-${AWS::Region}.s3.amazonaws.com/latest/install
-            sudo chmod +x ./install
-            sudo ./install auto
+          yum update -y
+          yum -y install mod_ssl
 
-            aws configure set default.s3.signature_version s3v4
-            aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.crt /etc/ssl/certs/common.crt --region ${AWS::Region}
-            aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.key /etc/ssl/private/common.key --region ${AWS::Region}
 
-            EC2_INSTANCE_ID=$(curl -s http://instance-data/latest/meta-data/instance-id)
+          # install codedeploy agent
+          sudo yum -y install ruby
+          sudo yum -y install wget
+          cd /home/ec2-user/
+          sudo wget https://aws-codedeploy-${AWS::Region}.s3.amazonaws.com/latest/install
+          sudo chmod +x ./install
+          sudo ./install auto
 
-            ######################################################################
-            # Volume /dev/sdh (which will get created as /dev/xvdh on Amazon Linux)
 
-            DATA_STATE="unknown"
-            until [ "${!DATA_STATE}" == "attached" ]; do
-              DATA_STATE=$(aws ec2 describe-volumes \
-              --region ${AWS::Region} \
-              --filters \
-                    Name=attachment.instance-id,Values=${!EC2_INSTANCE_ID} \
-                    Name=attachment.device,Values=/dev/sdh \
-              --query Volumes[].Attachments[].State \
-              --output text)
+          aws configure set default.s3.signature_version s3v4
+          aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.crt /etc/ssl/certs/common.crt --region ${AWS::Region}
+          aws s3 cp s3://${QSS3BucketName}/${QSS3SSLKeyPrefix}/common.key /etc/ssl/private/common.key --region ${AWS::Region}
 
-              sleep 5
-            done
 
-            # Format /dev/xvdh if it does not contain a partition yet
-            if [ "$(file -b -s /dev/xvdh)" == "data" ]; then
-              mkfs -t ext4 /dev/xvdh
-            fi
+          EC2_INSTANCE_ID=$(curl -s
+          http://instance-data/latest/meta-data/instance-id)
 
-            mkdir -p /data
-            mount /dev/xvdh /data
+          ######################################################################
+          # Volume /dev/sdh (which will get created as /dev/xvdh on Amazon Linux)
 
-            # Persist the volume in /etc/fstab so it gets mounted again
-            echo '/dev/xvdh /data ext4 defaults,nofail 0 2' >> /etc/fstab
 
-            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource rAutoScalingConfigApp --configsets webserver_install --region ${AWS::Region}
+          DATA_STATE="unknown"
 
-            cp /tmp/httpd/ssl.conf /etc/httpd/conf.d/ssl.conf
-            service httpd restart
+          until [ "${!DATA_STATE}" == "attached" ]; do
+            DATA_STATE=$(aws ec2 describe-volumes \
+            --region ${AWS::Region} \
+            --filters \
+                  Name=attachment.instance-id,Values=${!EC2_INSTANCE_ID} \
+                  Name=attachment.device,Values=/dev/sdh \
+            --query Volumes[].Attachments[].State \
+            --output text)
 
-            #build a website url page
-            echo 'Hello World.' > /var/www/html/index.html
+            sleep 5
+          done
 
-            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rAutoScalingGroupApp --region ${AWS::Region}
-          - QSS3Region:
-              !If
-              - GovCloudCondition
-              - s3-us-gov-west-1
-              - s3
+
+          # Format /dev/xvdh if it does not contain a partition yet
+
+          if [ "$(file -b -s /dev/xvdh)" == "data" ]; then
+            mkfs -t ext4 /dev/xvdh
+          fi
+
+
+          mkdir -p /data
+
+          mount /dev/xvdh /data
+
+
+          # Persist the volume in /etc/fstab so it gets mounted again
+
+          echo '/dev/xvdh /data ext4 defaults,nofail 0 2' >> /etc/fstab
+
+
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource
+          rAutoScalingConfigApp --configsets webserver_install --region
+          ${AWS::Region}
+
+
+          cp /tmp/httpd/ssl.conf /etc/httpd/conf.d/ssl.conf
+
+          service httpd restart
+
+
+          #build a website url page
+
+          echo 'Hello World.' > /var/www/html/index.html
+
+
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource
+          rAutoScalingGroupApp --region ${AWS::Region}
+        - QSS3Region: !If
+          - GovCloudCondition
+          - s3-us-gov-west-1
+          - s3
   rAutoScalingGroupApp:
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
     DependsOn: rAutoScalingConfigApp
     Properties:
       AvailabilityZones:
@@ -1117,8 +1153,8 @@ Resources:
       - !Ref pAppPrivateSubnetA
       - !Ref pAppPrivateSubnetB
       LaunchConfigurationName: !Ref rAutoScalingConfigApp
-      MinSize: "2"
-      MaxSize: "4"
+      MinSize: '2'
+      MaxSize: '4'
       LoadBalancerNames:
       - !Ref rELBApp
       HealthCheckType: ELB
@@ -1135,27 +1171,26 @@ Resources:
         Count: 1
         Timeout: PT15M
   rAutoScalingDownApp:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rAutoScalingGroupApp
-      Cooldown: "1"
+      Cooldown: '1'
       ScalingAdjustment: 1
   rAutoScalingUpApp:
-    Type: AWS::AutoScaling::ScalingPolicy
+    Type: 'AWS::AutoScaling::ScalingPolicy'
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref rAutoScalingGroupApp
-      Cooldown: "1"
+      Cooldown: '1'
       ScalingAdjustment: -1
   rCWAlarmHighCPUApp:
-    Type: AWS::CloudWatch::Alarm
+    Type: 'AWS::CloudWatch::Alarm'
     Properties:
       EvaluationPeriods: 1
       Statistic: Average
       Threshold: 50
-      AlarmDescription: Alarm if CPU too high or metric disappears indicating instance
-        is down
+      AlarmDescription: Alarm if CPU too high or metric disappears indicating instance is down
       Period: 60
       AlarmActions:
       - !Ref rAutoScalingDownApp
@@ -1166,12 +1201,12 @@ Resources:
       ComparisonOperator: GreaterThanThreshold
       MetricName: CPUUtilization
   rCWAlarmLowCPUApp:
-    Type: AWS::CloudWatch::Alarm
+    Type: 'AWS::CloudWatch::Alarm'
     Properties:
       EvaluationPeriods: 1
       Statistic: Average
       Threshold: 10
-      AlarmDescription: Alarm if CPU too low, remove an app server
+      AlarmDescription: 'Alarm if CPU too low, remove an app server'
       Period: 60
       AlarmActions:
       - !Ref rAutoScalingUpApp
@@ -1182,7 +1217,7 @@ Resources:
       ComparisonOperator: LessThanThreshold
       MetricName: CPUUtilization
   rPostProcInstanceRole:
-    Type: AWS::IAM::Role
+    Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -1192,7 +1227,7 @@ Resources:
             Service:
             - ec2.amazonaws.com
           Action:
-          - sts:AssumeRole
+          - 'sts:AssumeRole'
       Path: /
       Policies:
       - PolicyName: PostProcPermissions
@@ -1202,36 +1237,36 @@ Resources:
           - Sid: UploadServerCertificate
             Effect: Allow
             Action:
-            - iam:ListServerCertificates
-            - iam:UploadServerCertificate
+            - 'iam:ListServerCertificates'
+            - 'iam:UploadServerCertificate'
             Resource:
             - '*'
           - Sid: CreateLoadBalancerListener
             Effect: Allow
             Action:
-            - elasticloadbalancing:CreateLoadBalancerListeners
+            - 'elasticloadbalancing:CreateLoadBalancerListeners'
             Resource:
             - '*'
           - Sid: PublishNotificationTopic
             Effect: Allow
             Action:
-            - sns:Publish
+            - 'sns:Publish'
             Resource:
             - !Ref pSecurityAlarmTopic
           - Sid: SelfDestruct
             Effect: Allow
             Action:
-            - ec2:TerminateInstances
+            - 'ec2:TerminateInstances'
             Resource:
             - '*'
   rPostProcInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
       Path: /
       Roles:
       - !Ref rPostProcInstanceRole
   rPostProcInstance:
-    Type: AWS::EC2::Instance
+    Type: 'AWS::EC2::Instance'
     DependsOn:
     - rAutoScalingGroupApp
     - rAutoScalingGroupWeb
@@ -1242,33 +1277,42 @@ Resources:
       SubnetId: !Ref pAppPrivateSubnetA
       SecurityGroupIds:
       - !Ref rSecurityGroupAppInstance
-      UserData:
-        Fn::Base64: !Sub |
+      UserData: !Base64
+        'Fn::Sub': >
           #!/bin/bash -xe
 
+
           echo Configure the region, necessary especially for GovCloud
+
           aws configure set region ${AWS::Region}
 
+
           echo Send notification message...
+
           aws sns publish --topic-arn ${pSecurityAlarmTopic} \
             --subject "CloudFormation successfully launched ${AWS::StackName}" \
             --message "What now? Click here for more information: https://${rELBWeb.DNSName}/landing.html. Please note that the application server might be finishing up its initialization. If the link doesn't respond right away, please try it again in few minutes. This page resides on an application server in your new environment." \
             --region ${AWS::Region}
 
           echo Sleeping for 2 minutes to allow CloudFormation to catch up
+
           sleep 120
 
+
           echo Self-destruct!
-          aws ec2 terminate-instances --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --region ${AWS::Region}
+
+          aws ec2 terminate-instances --instance-id $(curl -s
+          http://169.254.169.254/latest/meta-data/instance-id) --region
+          ${AWS::Region}
       Tags:
       - Key: Name
         Value: PostProcessor
 Outputs:
   LandingPageURL:
-    Value: !Sub https://${rELBWeb.DNSName}/landing.html
+    Value: !Sub 'https://${rELBWeb.DNSName}/landing.html'
     Description: Landing Page
   WebsiteURL:
-    Value: !Sub https://${rELBWeb.DNSName}/index.html
+    Value: !Sub 'https://${rELBWeb.DNSName}/index.html'
     Description: Website URL
   rSecurityGroupWeb:
     Value: !Ref rSecurityGroupWeb
@@ -1278,9 +1322,10 @@ Outputs:
     Value: !Ref rSecurityGroupRDS
   SurveyLink:
     Description: Please take a moment to complete the survey by clicking this link
-    Value: https://aws.au1.qualtrics.com/SE/?SID=SV_55sYYdtY1NhTTgN&qs=${COMPLIANCE_SURVEY_LINK}
+    Value: >-
+      https://aws.au1.qualtrics.com/SE/?SID=SV_55sYYdtY1NhTTgN&qs=${COMPLIANCE_SURVEY_LINK}
   Help:
-    Description: For assistance or questions regarding this quickstart please email
+    Description: >-
+      For assistance or questions regarding this quickstart please email
       compliance-accelerator@amazon.com
     Value: ''
-...
