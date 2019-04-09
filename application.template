@@ -54,7 +54,6 @@ Metadata:
     - Label:
         default: AWS Quick Start Configuration
       Parameters:
-      - QuickStartS3URL
       - QSS3BucketName
       - QSS3KeyPrefix
       - QSS3SSLKeyPrefix
@@ -184,10 +183,6 @@ Parameters:
       include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/). It cannot start or end with forward slash (/) because
       they are automatically appended.
-    Type: String
-  QuickStartS3URL:
-    Description: Quick Start S3 URL prefix.
-    Default: 'https://s3.amazonaws.com'
     Type: String
 Mappings:
   elbMap:
